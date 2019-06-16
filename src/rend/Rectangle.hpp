@@ -1,5 +1,5 @@
-#ifndef _REND_RECTANGLE_HPP_
-#define _REND_RECTANGLE_HPP_
+#ifndef _CIRCUITRY_REND_RECTANGLE_HPP_
+#define _CIRCUITRY_REND_RECTANGLE_HPP_
 
 #include <stypox/stock_container.hpp>
 #include <glad/glad.h>
@@ -19,4 +19,4 @@ struct Rectangle {
 
 } // namespace rend
 
-#endif // _REND_RECTANGLE_HPP_
+#endif // _CIRCUITRY_REND_RECTANGLE_HPP_

@@ -1,5 +1,5 @@
-#ifndef _REND_RECTANGLESRENDER_HPP_
-#define _REND_RECTANGLESRENDER_HPP_
+#ifndef _CIRCUITRY_REND_RECTANGLESRENDER_HPP_
+#define _CIRCUITRY_REND_RECTANGLESRENDER_HPP_
 
 #include <stypox/stock_container.hpp>
 #include <glm/mat4x4.hpp>
@@ -19,4 +19,4 @@ public:
 
 } // namespace rend
 
-#endif // _REND_RECTANGLESRENDER_HPP_
+#endif // _CIRCUITRY_REND_RECTANGLESRENDER_HPP_
