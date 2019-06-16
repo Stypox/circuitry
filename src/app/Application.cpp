@@ -8,7 +8,7 @@
 
 namespace app {
 
-GLFWwindow* Application::window = nullptr;
+GLFWwindow* Application::m_window = nullptr;
 
 void Application::init() {
 	// GLFW initialization
@@ -20,21 +20,21 @@ void Application::init() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// window creation with GLFW
-	window = glfwCreateWindow(500, 500, "windowTitle", nullptr, nullptr);
-	if (window == nullptr) {
+	m_window = glfwCreateWindow(500, 500, "windowTitle", nullptr, nullptr);
+	if (m_window == nullptr) {
 		glfwTerminate();
 		throw std::runtime_error{"Unable to create glfw window."};
 	}
 
 	// context settings
-	glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
-	glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-	glfwMakeContextCurrent(window);
+	glfwSetInputMode(m_window, GLFW_STICKY_KEYS, GLFW_TRUE);
+	glfwSetInputMode(m_window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(0);
 
 	// GLAD initialization
 	if (int errorCode = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress); !errorCode) {
-		glfwDestroyWindow(window);
+		glfwDestroyWindow(m_window);
 		glfwTerminate();
 		throw std::runtime_error{"Unable to initialize glad, error " + std::to_string(errorCode)};
 	}
@@ -48,9 +48,10 @@ void Application::loop() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	rend::Rectangle rect{rend::RectangleData{0,0,0.9,0.7,1.0,0.5}};
+	rend::Rectangle rect1{rend::RectangleData{0,0,0.9,0.7,1.0,0.5}};
+	rend::Rectangle rect2{rend::RectangleData{0,0.1,0.2,0.2,0.5,0.5}};
 
-	while (!glfwWindowShouldClose(window)) {
+	while (!glfwWindowShouldClose(m_window)) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (GLenum e = glGetError(); e) {
@@ -59,7 +60,7 @@ void Application::loop() {
 
 		glfwPollEvents();
 		rend::Renderer::draw();
-		glfwSwapBuffers(window);
+		glfwSwapBuffers(m_window);
 	}
 }
 

@@ -13,12 +13,12 @@ namespace rend {
 
 class RectangleRender {
 	friend class Rectangle;
-	static stypox::StockContainer<RectangleData> rectangles;
+	static stypox::StockContainer<RectangleData> m_rectangles;
 
-	static std::unique_ptr<stypox::gl::Shader> shader;
-	static std::unique_ptr<stypox::gl::Texture2D> texture;
+	static std::unique_ptr<stypox::gl::Shader> m_shader;
+	static std::unique_ptr<stypox::gl::Texture2D> m_texture;
 
-	static GLuint vao, verticesVbo, verticesEbo, dataVbo;
+	static GLuint m_vao, m_verticesVbo, m_verticesEbo, m_dataVbo;
 
 public:
 	static void init();

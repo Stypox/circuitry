@@ -7,7 +7,7 @@
 namespace app {
 
 class Application {
-	static GLFWwindow* window;
+	static GLFWwindow* m_window;
 
 	static void init();
 	static void loop();
