@@ -5,6 +5,12 @@
 namespace util {
 
 void debug(Gravity gravity, const std::string& source, const std::string& message) {
+	static std::string lastSource, lastMessage;
+	if (source == lastSource && message == lastMessage)
+		return;
+	lastSource = source;
+	lastMessage = message;
+	
 	if (gravity >= /*Arguments::verbosity*/Gravity::info) {
 		switch (gravity) {
 			case Gravity::info:
