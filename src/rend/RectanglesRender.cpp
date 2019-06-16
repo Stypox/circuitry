@@ -2,6 +2,7 @@
 
 #include "Renderer.hpp"
 #include "util/debug.hpp"
+#include "app/Arguments.hpp"
 
 using namespace stypox::gl;
 
@@ -13,18 +14,19 @@ std::unique_ptr<stypox::gl::Texture2D> RectangleRender::m_texture = nullptr;
 GLuint RectangleRender::m_vao{}, RectangleRender::m_verticesVbo{}, RectangleRender::m_verticesEbo{}, RectangleRender::m_dataVbo{};
 
 void RectangleRender::init() {
-	m_shader.reset(new Shader{"./src/rend/shader/rectangles.vert", "./src/rend/shader/rectangles.frag"});
+	m_shader.reset(new Shader{app::Arguments::rectanglesVertexShader, app::Arguments::rectanglesFragmentShader});
 	m_texture.reset(new Texture2D{Renderer::rectanglesTexturePos, "rectangles.png", GL_RGBA, GL_REPEAT, GL_REPEAT, GL_NEAREST, GL_NEAREST});
 
 
+	constexpr const char* debugTag = "rend::RectangleRender::init";
 	if (m_shader->errors())
-		util::debug(util::Gravity::error, "Rectangles", m_shader->debugInfo("rend::Rectangles::m_shader"));
+		util::debug(util::Gravity::error, debugTag, m_shader->debugInfo("rend::Rectangles::m_shader"));
 	else
-		util::debug(util::Gravity::info, "Rectangles", m_shader->debugInfo("rend::Rectangles::m_shader"));
+		util::debug(util::Gravity::info, debugTag, m_shader->debugInfo("rend::Rectangles::m_shader"));
 	if (m_texture->fileOk())
-		util::debug(util::Gravity::info, "Rectangles", m_texture->debugInfo("rend::Rectangles::m_texture"));
+		util::debug(util::Gravity::info, debugTag, m_texture->debugInfo("rend::Rectangles::m_texture"));
 	else
-		util::debug(util::Gravity::error, "Rectangles", m_texture->debugInfo("rend::Rectangles::m_texture"));
+		util::debug(util::Gravity::error, debugTag, m_texture->debugInfo("rend::Rectangles::m_texture"));
 
 
 	constexpr std::array<GLfloat, 16> vertices {

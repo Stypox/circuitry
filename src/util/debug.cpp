@@ -1,6 +1,7 @@
 #include "debug.hpp"
 
 #include <iostream>
+#include "app/Arguments.hpp"
 
 namespace util {
 
@@ -11,7 +12,7 @@ void debug(Gravity gravity, const std::string& source, const std::string& messag
 	lastSource = source;
 	lastMessage = message;
 	
-	if (gravity >= /*Arguments::verbosity*/Gravity::info) {
+	if (gravity >= app::Arguments::verbosity) {
 		switch (gravity) {
 			case Gravity::info:
 				std::clog << "[" << source << "] info: " << message << "\n";

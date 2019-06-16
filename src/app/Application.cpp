@@ -5,6 +5,8 @@
 #include "rend/Renderer.hpp"
 #include "util/debug.hpp"
 #include "rend/Rectangle.hpp"
+#include "Arguments.hpp"
+#include "util/resources.hpp"
 
 namespace app {
 
@@ -20,7 +22,7 @@ void Application::init() {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	// window creation with GLFW
-	m_window = glfwCreateWindow(500, 500, "windowTitle", nullptr, nullptr);
+	m_window = glfwCreateWindow(Arguments::width, Arguments::height, util::windowName, nullptr, nullptr);
 	if (m_window == nullptr) {
 		glfwTerminate();
 		throw std::runtime_error{"Unable to create glfw window."};
@@ -43,6 +45,7 @@ void Application::init() {
 	stypox::gl::Texture2D::setDirectory("./res");
 	rend::Renderer::init();
 }
+
 void Application::loop() {
 	glClearColor(0.0625, 0.0625, 0.0625, 1.0);
 	glEnable(GL_BLEND);
@@ -55,7 +58,7 @@ void Application::loop() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		if (GLenum e = glGetError(); e) {
-			util::debug(util::Gravity::error, "MainLoop", "OpenGL " + std::to_string(e));
+			util::debug(util::Gravity::error, "app::Application::loop", "OpenGL " + std::to_string(e));
 		}
 
 		glfwPollEvents();
