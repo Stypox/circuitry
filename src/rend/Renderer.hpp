@@ -7,9 +7,10 @@ namespace rend {
 
 class Renderer {
 public:
-	static constexpr GLint rectanglesTexturePos = 1;
+	static constexpr GLint rectanglesTexturePos = 0;
 	
 	static void init();
+	static void draw();
 };
 
 } // namespace rend
