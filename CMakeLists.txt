@@ -19,3 +19,4 @@ add_executable(executable ${SOURCES})
 
 # Includes
 target_include_directories(executable PRIVATE libs/stock-container/include)
+target_include_directories(executable PRIVATE libs/glad/include)
