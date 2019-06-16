@@ -13,7 +13,7 @@ std::unique_ptr<stypox::gl::Texture2D> RectangleRender::texture = nullptr;
 GLuint RectangleRender::vao{}, RectangleRender::verticesVbo{}, RectangleRender::verticesEbo{}, RectangleRender::dataVbo{};
 
 void RectangleRender::init() {
-	shader.reset(new Shader{"./src/rend/shader/rectangles.vert", "./src/rend/shader/rectangles.vert"});
+	shader.reset(new Shader{"./src/rend/shader/rectangles.vert", "./src/rend/shader/rectangles.frag"});
 	texture.reset(new Texture2D{Renderer::rectanglesTexturePos, "rectangles.png", GL_RGBA, GL_REPEAT, GL_REPEAT, GL_NEAREST, GL_NEAREST});
 
 
@@ -39,48 +39,65 @@ void RectangleRender::init() {
 	};
 
 	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
 	glGenBuffers(1, &verticesVbo);
+	glBindBuffer(GL_ARRAY_BUFFER, verticesVbo);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size()*sizeof(GLfloat), vertices.data(), GL_STATIC_DRAW);
+
 	glGenBuffers(1, &verticesEbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, verticesEbo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size()*sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+
 	glGenBuffers(1, &dataVbo);
 
-	glBindVertexArray(vao);	
+	GLint positionLoc = shader->getAttribLocation("position");
+	GLint texturePositionLoc = shader->getAttribLocation("texturePosition");
+	GLint offsetLoc = shader->getAttribLocation("offset");
+	GLint sizeLoc = shader->getAttribLocation("size");
+	GLint textureOffsetLoc = shader->getAttribLocation("textureOffset");
+	GLint textureWidthLoc = shader->getAttribLocation("textureWidth");
 
+	constexpr size_t vertexStride = 4 * sizeof(GLfloat);
 	glBindBuffer(GL_ARRAY_BUFFER, verticesVbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices.data(), GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, verticesEbo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices.data(), GL_STATIC_DRAW);
+	glEnableVertexAttribArray(positionLoc);
+	glVertexAttribPointer(positionLoc, 2, GL_FLOAT, GL_FALSE, vertexStride, (void*)0);
+	glVertexAttribDivisor(positionLoc, 0);
+	glEnableVertexAttribArray(texturePositionLoc);
+	glVertexAttribPointer(texturePositionLoc, 2, GL_FLOAT, GL_FALSE, vertexStride, (void*)(2 * sizeof(GLfloat)));
+	glVertexAttribDivisor(texturePositionLoc, 0);
 
-
-	constexpr size_t strideVertices = 4 * sizeof(GLfloat);
-	glBindBuffer(GL_ARRAY_BUFFER, verticesVbo);
-	GLint positionIndex = shader->getAttribLocation("position");
-	glEnableVertexAttribArray(positionIndex);
-	glVertexAttribPointer(positionIndex, 2, GL_FLOAT, GL_FALSE, strideVertices, (void*)0);
-	glVertexAttribDivisor(positionIndex, 0);
-	GLint texturePositionIndex = shader->getAttribLocation("texturePosition");
-	glEnableVertexAttribArray(texturePositionIndex);
-	glVertexAttribPointer(texturePositionIndex, 2, GL_FLOAT, GL_FALSE, strideVertices, (void*)2);
-	glVertexAttribDivisor(texturePositionIndex, 0);
-
-	constexpr size_t strideData = sizeof(RectangleData);
+	constexpr size_t dataStride = sizeof(RectangleData);
 	glBindBuffer(GL_ARRAY_BUFFER, dataVbo);
-	GLint offsetIndex = shader->getAttribLocation("offset");
-	glEnableVertexAttribArray(offsetIndex);
-	glVertexAttribPointer(offsetIndex, 2, GL_FLOAT, GL_FALSE, strideData, (void*)0);
-	glVertexAttribDivisor(offsetIndex, 0);
-	GLint sizeIndex = shader->getAttribLocation("size");
-	glEnableVertexAttribArray(sizeIndex);
-	glVertexAttribPointer(sizeIndex, 2, GL_FLOAT, GL_FALSE, strideData, (void*)2);
-	glVertexAttribDivisor(sizeIndex, 0);
-	GLint textureOffsetIndex = shader->getAttribLocation("textureOffset");
-	glEnableVertexAttribArray(textureOffsetIndex);
-	glVertexAttribPointer(textureOffsetIndex, 1, GL_FLOAT, GL_FALSE, strideData, (void*)4);
-	glVertexAttribDivisor(textureOffsetIndex, 0);
-	GLint textureWidthIndex = shader->getAttribLocation("textureWidth");
-	glEnableVertexAttribArray(textureWidthIndex);
-	glVertexAttribPointer(textureWidthIndex, 1, GL_FLOAT, GL_FALSE, strideData, (void*)5);
-	glVertexAttribDivisor(textureWidthIndex, 0);
+
+	glEnableVertexAttribArray(offsetLoc);
+	glVertexAttribPointer(offsetLoc, 2, GL_FLOAT, GL_FALSE, dataStride, (void*)0);
+	glVertexAttribDivisor(offsetLoc, 1);
+	glEnableVertexAttribArray(sizeLoc);
+	glVertexAttribPointer(sizeLoc, 2, GL_FLOAT, GL_FALSE, dataStride, (void*)(2 * sizeof(GLfloat)));
+	glVertexAttribDivisor(sizeLoc, 1);
+	glEnableVertexAttribArray(textureOffsetLoc);
+	glVertexAttribPointer(textureOffsetLoc, 1, GL_FLOAT, GL_FALSE, dataStride, (void*)(4 * sizeof(GLfloat)));
+	glVertexAttribDivisor(textureOffsetLoc, 1);
+	glEnableVertexAttribArray(textureWidthLoc);
+	glVertexAttribPointer(textureWidthLoc, 1, GL_FLOAT, GL_FALSE, dataStride, (void*)(5 * sizeof(GLfloat)));
+	glVertexAttribDivisor(textureWidthLoc, 1);
+
+	shader->bind();
+	shader->uniform("rectanglesTexture", Renderer::rectanglesTexturePos);
+}
+
+void RectangleRender::draw(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix) {
+	glBindBuffer(GL_ARRAY_BUFFER, dataVbo);
+	glBufferData(GL_ARRAY_BUFFER, rectangles.size()*sizeof(RectangleData), rectangles.data(), GL_STREAM_DRAW);
+
+	glBindVertexArray(vao);
+	shader->bind();
+	shader->uniform("projection", projectionMatrix);
+	shader->uniform("view", viewMatrix);
+
+	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, rectangles.size());
 }
 
 } // namespace rend
