@@ -17,5 +17,5 @@ project(circuitry)
 file(GLOB_RECURSE SOURCES src/*.cpp)
 add_executable(executable ${SOURCES})
 
-#Copy resources
-#file(COPY ${CMAKE_SOURCE_DIR}/Res DESTINATION ${CMAKE_BINARY_DIR})
+# Includes
+target_include_directories(executable PRIVATE libs/stock-container/include)
