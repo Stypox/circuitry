@@ -1,3 +1,6 @@
 [submodule "libs/stock-container"]
 	path = libs/stock-container
 	url = https://github.com/Stypox/stock-container
+[submodule "libs/gl-abstractions"]
+	path = libs/gl-abstractions
+	url = https://github.com/Stypox/gl-abstractions
