@@ -16,7 +16,7 @@ uniform mat4 view;
 void main() {
 	vec2 originPosition = position * size * 0.5;
 
-   gl_Position = vec4(originPosition + offset, 0.0, 1.0);
+   gl_Position = projection * view * vec4(originPosition + offset, 0.0, 1.0);
 
 	if (position.x < 0.5)	// position.x is 0.0, thus < 0.5
 		vTexturePosition.x = abs(textureOffset);

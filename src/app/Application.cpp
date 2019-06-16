@@ -34,6 +34,9 @@ void Application::init() {
 	glfwMakeContextCurrent(m_window);
 	glfwSwapInterval(0);
 
+	// events
+	glfwSetFramebufferSizeCallback(m_window, framebufferSizeCallback);
+
 	// GLAD initialization
 	if (int errorCode = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress); !errorCode) {
 		glfwDestroyWindow(m_window);
@@ -44,6 +47,8 @@ void Application::init() {
 	// render engine initialization
 	stypox::gl::Texture2D::setDirectory("./res");
 	rend::Renderer::init();
+	rend::Renderer::updateScreenSize(Arguments::width, Arguments::height);
+	rend::Renderer::moveCameraTo(0.8, 0.8);
 }
 
 void Application::loop() {
@@ -51,8 +56,9 @@ void Application::loop() {
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	rend::Rectangle rect1{rend::RectangleData{0,0,0.9,0.7,1.0,0.5}};
-	rend::Rectangle rect2{rend::RectangleData{0,0.1,0.2,0.2,0.5,0.5}};
+	rend::Rectangle rect1{rend::RectangleData{-0.7, 0.7, 0.2, 0.2, 0.5, 0.0}};
+	rend::Rectangle rect2{rend::RectangleData{0.3, 0.3, 0.1, 0.1, 0.5, 0.0}};
+	rend::Rectangle rect3{rend::RectangleData{0.8, 0.8, 0.005, 0.005, 0.5, 0.0}};
 
 	while (!glfwWindowShouldClose(m_window)) {
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -65,6 +71,11 @@ void Application::loop() {
 		rend::Renderer::draw();
 		glfwSwapBuffers(m_window);
 	}
+}
+
+void Application::framebufferSizeCallback(GLFWwindow*, int width, int height) {
+	glViewport(0, 0, width, height);
+	rend::Renderer::updateScreenSize(width, height);
 }
 
 int Application::run() {

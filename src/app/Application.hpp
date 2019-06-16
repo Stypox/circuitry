@@ -11,6 +11,8 @@ class Application {
 
 	static void init();
 	static void loop();
+
+	static void framebufferSizeCallback(GLFWwindow*, int width, int height);
 public:
 	static int run();
 };
