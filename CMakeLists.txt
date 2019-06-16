@@ -42,6 +42,7 @@ add_executable(executable ${SOURCES} $<TARGET_OBJECTS:gl-abstractions> $<TARGET_
 target_link_libraries(executable SOIL stdc++fs GL GLU glfw3 X11 Xxf86vm Xrandr pthread Xi dl Xinerama Xcursor)
 
 # Includes
+target_include_directories(executable PRIVATE src)
 target_include_directories(executable PRIVATE libs/stock-container/include)
 target_include_directories(executable PRIVATE libs/glad/include)
 target_include_directories(executable PRIVATE libs/gl-abstractions/include)
