@@ -1,0 +1,2 @@
+# Circuitry 
+A game/tool that lets you build turing-complete circuits using only transistors! Transistors (or other components) can be grouped into components (e.g. gates, adders, memory cells...), leading to fast development.
