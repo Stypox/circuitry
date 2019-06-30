@@ -12,7 +12,7 @@ struct RectangleData {
 };
 
 struct Rectangle {
-	stypox::StockContainer<RectangleData>::handler m_renderData;
+	stypox::StockContainer<RectangleData>::handler renderData;
 
 	Rectangle(const RectangleData& rectangleData);
 };

@@ -49,6 +49,9 @@ void Application::init() {
 	rend::Renderer::init();
 	rend::Renderer::updateScreenSize(Arguments::width, Arguments::height);
 	rend::Renderer::moveCameraTo(0.8, 0.8);
+
+	// log information
+	util::debug(util::Gravity::info, "app::Application::init", "OpenGL max number of active textures = " + std::to_string(GL_MAX_COMBINED_TEXTURE_IMAGE_UNITS-GL_TEXTURE0));
 }
 
 void Application::loop() {
